@@ -21,7 +21,14 @@
     <section class="content">
       <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
-        <?php echo view($isi);?>
+
+        <?php
+        // die($isi);
+        if($isi){
+          echo view($isi);
+        }
+        ?>
+        
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
     </section>

@@ -38,132 +38,164 @@
 <script>
 
     $(document).ready(function(){
-        
+
+      fetchData();
+
+      $('#cardBarang').click(function(e){
+
+        const target=e.target;
+
+
+        // tambah
+        if(target.id == "btnTambah"){
+          console.log("tambah");
+          $('.modal-title').text('Tambah Barang');
+          $('#btnSaveEdit').hide();
+          $('#btnSaveTambah').show();
+
+          $('#kodeBarang').val(null);
+          $('#namaBarang').val(null);
+          $('#stock').val(null);
+        }
+
+        // save Tambah
+
+        if(target.id == "btnSaveTambah"){
+          let data={
+            nama_barang:$('#namaBarang').val(),
+            stock:$('#stock').val()
+          }
+
+          console.log(data);
+
+          $.post("http://localhost:8080/Admin/Home/tambahBarang",data,function(result){
+            console.log(result);
+            
+            if(result){
+              alert("Berhasil Insert");
+              fetchData();
+            }else{
+              alert("Gagal Insert");
+            }
+          });
+        }
+
         // btn Edit
-        // fetchData();
-
-        // function fetchData(){
-        //   let html='';
-        //   $.get("http://localhost:8080/Admin/Home/getAll",function(result){
-            
-        //     let data=JSON.parse(result);
-            
-        //     data.forEach(function(row){
-        //       html+=`
-        //       <tr>
-        //                     <td>${row.kode_barang}</td>
-        //                     <td> ${row.nama_barang}</td>
-        //                     <td>${row.stock}</td>
-        //                     <td>
-        //                         <button class='btn btn-info btnEdit' data-toggle='modal' data-target='#modal-edit' data-id='${row.kode_barang}'>Edit</button>
-        //                         <button class='btn btn-danger btnHapus' data-toggle='modal' data-target='#modal-hapus' data-id='${row.kode_barang}'>Hapus</button>
-        //                     </td>
-        //                 </tr>
-        //       `;
-        //     })
-            
-            
-        //     $('#tbodyBarang').append(html);
-        //   });
-        // }
-
-        $('.btnEdit').click(function(){
-
+        if(target.classList.contains("btnEdit")){
+          console.log("Edit");
           $('.modal-title').text('Edit Barang');
           $('#btnSaveTambah').hide();
-         $('#btnSaveEdit').show();
+          $('#btnSaveEdit').show();
           
-            let kodeBarang=$(this).data('id');
-            console.log(kodeBarang);
-            let url="http://localhost:8080/Admin/Home/getOne/"+kodeBarang;
+          let kodeBarang=$(target).data('id');
+          console.log(kodeBarang);
+          let url="http://localhost:8080/Admin/Home/getOne/"+kodeBarang;
 
-            $.get(url,function(result){
-              let data=JSON.parse(result);
-              console.log(data);
-              $('#kodeBarang').val(data.kode_barang);
-              $('#namaBarang').val(data.nama_barang);
-              $('#stock').val(data.stock);
-            })
-        });
-
-    });
-
-    // save Edit
-
-    $('#btnSaveEdit').click(function(){
-
-      // hide SaveTambah
-     
-
-
-      let kodeBarang=$('#kodeBarang').val();
-
-      let data={
-        nama_barang :$('#namaBarang').val(),
-        stock :$('#stock').val()
-      }
-
-      let url="http://localhost:8080/Admin/Home/editBarang/"+kodeBarang;
-
-      $.post(url,data,function(result){
-        
-        alert('Berhasil Update');
-        // fetchData();
-      });
-    });
-
-    // hapus
-
-    $('.btnHapus').click(function(){
-      let kodeBarang=$(this).data('id');
-      let url="http://localhost:8080/Admin/Home/hapusBarang/"+kodeBarang;
-      
-      let konfirm=confirm("Yakin Ingin Menghapus??");
-      console.log(konfirm);
-      if(konfirm){
-          $.get(url,function(res){
-            alert("Berhasil Menghapus");
-            // fetchData();
+          $.get(url,function(result){
+            let data=JSON.parse(result);
+            console.log(data);
+            $('#kodeBarang').val(data.kode_barang);
+            $('#namaBarang').val(data.nama_barang);
+            $('#stock').val(data.stock);
           });
-      }
-      
-    });
-
-
-    // tambah
-
-    $('#btnTambah').click(function(){
-      $('.modal-title').text('Tambah Barang');
-      $('#btnSaveEdit').hide();
-      $('#btnSaveTambah').show();
-
-      $('#kodeBarang').val(null);
-        $('#namaBarang').val(null);
-        $('#stock').val(null);
-      
-    });
-
-    $('#btnSaveTambah').click(function(){
-      let data={
-        nama_barang:$('#namaBarang').val(),
-        stock:$('#stock').val()
-      }
-
-      console.log(data);
-
-      $.post("http://localhost:8080/Admin/Home/tambahBarang",data,function(result){
-        console.log(result);
-        
-        if(result){
-          alert("Berhasil Insert");
-          // fetchData();
-        }else{
-          alert("Gagal Insert");
         }
+
+        // save Edit
+        if(target.id == "btnSaveEdit"){
+          let kodeBarang=$('#kodeBarang').val();
+
+          let data={
+            nama_barang :$('#namaBarang').val(),
+            stock :$('#stock').val()
+          }
+
+          let url="http://localhost:8080/Admin/Home/editBarang/"+kodeBarang;
+
+          $.post(url,data,function(result){
+            
+            alert('Berhasil Update');
+            fetchData();
+          });
+        }
+
+
+        // Hapus
+        if(target.classList.contains("btnHapus")){
+          let kodeBarang=$(target).data('id');
+          let url="http://localhost:8080/Admin/Home/hapusBarang/"+kodeBarang;
+          
+          let konfirm=confirm("Yakin Ingin Menghapus??");
+          console.log(konfirm);
+          if(konfirm){
+              $.get(url,function(res){
+                alert("Berhasil Menghapus");
+                fetchData();
+              });
+          }
+        }
+
+        // transaksiBarang
+        
       });
-    })
+
+      $('#btnTransaksi').click(function(){
+        console.log('kode');
+        
+          $.get("http://localhost:8080/Admin/Home/getAll",function(result){
+            console.log(result);
+            
+            let dataResult=JSON.parse(result);
+
+            dataResult.forEach(function(re){
+              let opt=document.createElement('option');
+              opt.value=re.kode_barang;
+              opt.innerHTML=re.nama_barang;
+
+              $('#transaksiKodeBarang').append(opt);
+              
+            });
+
+            $('#transaksiKodeBarang').append('<option id="lainnya">Lainya....</option>');
+            
+          })
+      })
+
+      
+      
+        
+      
+        
+
+      function fetchData(){
+        console.log("fetch");
+        let html='';
+        $.get("http://localhost:8080/Admin/Home/getAll",function(result){
+          
+          let data=JSON.parse(result);
+          
+          data.forEach(function(row){
+            html+=`
+            <tr>
+                          <td>${row.kode_barang}</td>
+                          <td> ${row.nama_barang}</td>
+                          <td>${row.stock}</td>
+                          <td>
+                              <button class='btn btn-info btnEdit' data-toggle='modal' data-target='#modal-edit' data-id='${row.kode_barang}'>Edit</button>
+                              <button class='btn btn-danger btnHapus' data-toggle='modal' data-target='#modal-hapus' data-id='${row.kode_barang}'>Hapus</button>
+                          </td>
+                      </tr>
+            `;
+          })
+          
+          
+          $('#tbodyBarang').html(html);
+        });
+      }
 
 
+    });
+
+       
 
 </script>
 
