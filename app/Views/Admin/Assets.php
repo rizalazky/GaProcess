@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header">
             <button class="btn btn-default" data-toggle="modal" data-target="#modal-edit" id="btnTambah">Tambah</button>
-            <select name="" id="">
+            <select name="" id="" class="btn btn-default">
                 <option value="">Mobil</option>
                 <option value="">Gedung</option>
             </select>
@@ -11,9 +11,10 @@
         <div class="card-body">
             <table class="table table-hover table-bordered">
                 <thead>
-                    <th>Kode Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Stock Barang</th>
+                    <th>Kode Assets</th>
+                    <th>Jenis Assets</th>
+                    <th>No Dokumen</th>
+                    <th>Alamat</th>
                     <th>Action</th>
                 </thead>
                 <tbody id="tbodyBarang">

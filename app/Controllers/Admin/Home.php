@@ -39,7 +39,15 @@
             $datta=$_POST;
             $insert=$model->insert($datta);
 
-            echo json_encode($insert);
+            $response;
+
+            if($insert){
+                $response=true;
+            }else{
+                $response=false;
+            }
+
+            echo json_encode($response);
         }
 
         public function hapusBarang($kodeBarang){
@@ -54,6 +62,23 @@
             $data=$model->findAll();
 
             echo json_encode($data);
+        }
+
+        public function updateStock($kodeBarang){
+            $model=new M_Barang();
+
+            $data=$_POST;
+
+            $update=$model->update($kodeBarang,$data);
+            $response;
+            if($update){
+                $response=1;
+            }else{
+                $response=2;
+            }
+
+            echo json_encode($response);
+
         }
     }
 ?>

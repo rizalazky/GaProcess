@@ -35,11 +35,20 @@
 <script src="<?php echo base_url();?>/assets/dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url();?>/assets/dist/js/demo.js"></script>
+<script src="<?php echo base_url();?>/assets/dist/js/select2.min.js"></script>
 <script>
 
     $(document).ready(function(){
 
+      
+
       fetchData();
+      fetchDataTransaksi();
+
+      $('#transaksiKodeBarang').select2({
+        theme:'classic',
+        width:'resolve'
+      });
 
       $('#cardBarang').click(function(e){
 
@@ -48,8 +57,8 @@
 
         // tambah
         if(target.id == "btnTambah"){
-          console.log("tambah");
-          $('.modal-title').text('Tambah Barang');
+          
+          $('#judulModal').text('Tambah Barang');
           $('#btnSaveEdit').hide();
           $('#btnSaveTambah').show();
 
@@ -65,25 +74,25 @@
             nama_barang:$('#namaBarang').val(),
             stock:$('#stock').val()
           }
+    
+          let url="http://localhost:8080/Admin/Home/tambahBarang";
 
-          console.log(data);
-
-          $.post("http://localhost:8080/Admin/Home/tambahBarang",data,function(result){
-            console.log(result);
-            
-            if(result){
-              alert("Berhasil Insert");
+          $.post(url,data,function(res){
+            if(res=='true'){
+              alert('Berhasil Insert');
               fetchData();
             }else{
-              alert("Gagal Insert");
+              alert('Gagal Insert');
             }
           });
+
+          
         }
 
         // btn Edit
         if(target.classList.contains("btnEdit")){
-          console.log("Edit");
-          $('.modal-title').text('Edit Barang');
+          
+          $('#judulModal').text('Edit Barang');
           $('#btnSaveTambah').hide();
           $('#btnSaveEdit').show();
           
@@ -134,28 +143,80 @@
           }
         }
 
-        // transaksiBarang
+        // transaksiBarang save
+
+        if(target.id== "btnSaveTransaksi"){
+          let data={
+            kode_barang:$('#transaksiKodeBarang').val(),
+            jenis_transaksi:$('#jenisTransaksi').val(),
+            Qty:$('#transaksiJumlahBarang').val()
+          }
+
+          let urlTransaksi="http://localhost:8080/Admin/Transaksi/transaksiInsert";
+
+          let create=create(urlTransaksi,data);
+
+          
+            if(create){
+              $.get('http://localhost:8080/Admin/Home/getOne/'+$('#transaksiKodeBarang').val(),function(res){
+
+                let datanyaaa=JSON.parse(res);
+                let stockLama=datanyaaa.stock;
+                
+                let updateStock=0;
+
+                console.log(typeof($('#jenisTransaksi').val()));
+
+                if($('#jenisTransaksi').val() == 1){
+                  updateStock=Number(stockLama)+Number($('#transaksiJumlahBarang').val());
+                }else{
+                  updateStock=Number(stockLama)-Number($('#transaksiJumlahBarang').val());
+                }
+
+                
+
+                let data={
+                  stock:updateStock
+                }
+
+                $.post('http://localhost:8080/Admin/Home/updateStock/'+$('#transaksiKodeBarang').val(),data,function(result){
+                  if(result == 1){
+                    alert('Transaksi Berhasil');
+                  }else{
+                    alert('Transaksi Gagal')
+                  }
+
+                  fetchData();
+                })
+              });
+
+            }
+          
+        }
+
         
       });
 
       $('#btnTransaksi').click(function(){
-        console.log('kode');
+        
         
           $.get("http://localhost:8080/Admin/Home/getAll",function(result){
             console.log(result);
             
             let dataResult=JSON.parse(result);
 
-            dataResult.forEach(function(re){
-              let opt=document.createElement('option');
-              opt.value=re.kode_barang;
-              opt.innerHTML=re.nama_barang;
+            
 
-              $('#transaksiKodeBarang').append(opt);
+            let opt='';
+            dataResult.forEach(function(re){
+
+              opt+=`<option value='${re.kode_barang}' class='form-control'>${re.nama_barang}</option>`;
+
+              
               
             });
-
-            $('#transaksiKodeBarang').append('<option id="lainnya">Lainya....</option>');
+            $('#transaksiKodeBarang').html(opt);
+            // $('#transaksiKodeBarang').append('<option id="lainnya" data-toggle="modal" data-target="#modal-edit">Lainya....</option>');
             
           })
       })
@@ -191,6 +252,38 @@
           $('#tbodyBarang').html(html);
         });
       }
+
+      function fetchDataTransaksi(){
+        console.log('Data Transaksi');
+        let html='';
+        $.get("http://localhost:8080/Admin/transaksi/getAll",function(result){
+          
+          let data=JSON.parse(result);
+          let bulan=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+          data.forEach(function(row){
+            
+            let tanggal=new Date(row.date);
+            html+=`
+            <tr>
+                          <td>${row.kode_transaksi}</td>
+                          <td> ${row.jenis_transaksi == 1 ? 'IN' : 'OUT'}</td>
+                          <td>${row.nama_barang}</td>
+                          <td>${row.Qty}</td>
+                          <td>${tanggal.getDay()} ${bulan[tanggal.getMonth()]} ${tanggal.getFullYear()}</td>
+                          <td>
+                              <button class='btn btn-info btnEdit' data-toggle='modal' data-target='#modal-edit' data-id='${row.kode_transaksi}'>Edit</button>
+                              <button class='btn btn-danger btnHapus' data-toggle='modal' data-target='#modal-hapus' data-id='${row.kode_transaksi}'>Hapus</button>
+                          </td>
+                      </tr>
+            `;
+          })
+          
+          
+          $('#tbodyTransaksi').html(html);
+        });
+      }
+
+      
 
 
     });

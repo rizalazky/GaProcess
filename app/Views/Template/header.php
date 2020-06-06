@@ -40,15 +40,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./index2.html" class="nav-link">
+                <a href="<?php echo base_url('Admin/transaksi');?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Data Barang Masuk</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="./index3.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Barang Keluar</p>
+                  <p>Transaksi Barang</p>
                 </a>
               </li>
             </ul>

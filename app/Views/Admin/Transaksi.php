@@ -8,12 +8,14 @@
         <div class="card-body">
             <table class="table table-hover table-bordered">
                 <thead>
-                    <th>Kode Barang</th>
+                    <th>Kode Transaksi</th>
+                    <th>Jenis Transaksi</th>
                     <th>Nama Barang</th>
-                    <th>Stock Barang</th>
+                    <th>Jumlah</th>
+                    <th>Tanggal</th>
                     <th>Action</th>
                 </thead>
-                <tbody id="tbodyBarang">
+                <tbody id="tbodyTransaksi">
                     
                 </tbody>
             </table>
@@ -22,23 +24,23 @@
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h4 class="modal-title" id="judulModal">Edit Data Barang</h4>
+                    <h4 class="modal-title">Edit Data Barang</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group" style="display:none"> 
+                        <div class="form-group">
                             <label for="exampleInputEmail1">Kode Barang</label>
-                            <input type="email" class="form-control" id="kodeBarang" placeholder="kode barang">
+                            <input type="email" class="form-control" id="kodeBarang" placeholder="Enter email">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Nama Barang</label>
-                            <input type="text" class="form-control" id="namaBarang" placeholder="nama barang">
+                            <input type="text" class="form-control" id="namaBarang" placeholder="Password">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Stock</label>
-                            <input type="text" class="form-control" id="stock" placeholder="stock">
+                            <input type="text" class="form-control" id="stock" placeholder="Password">
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
